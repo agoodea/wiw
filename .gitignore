@@ -226,6 +226,10 @@ build/Release
 node_modules
 jspm_packages
 
+www
+platforms
+
+
 # Optional npm cache directory
 .npm
 
