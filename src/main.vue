@@ -27,7 +27,7 @@
 				<!-- Pages -->
 				<f7-pages>
 					<f7-page>
-						
+						<photograb></photograb>
 					</f7-page>
 				</f7-pages>
 			</f7-view>
@@ -39,10 +39,12 @@
 <script>
 	import Panel from './components/panel';
 	import BottomTabs from './components/bottomTabs';
+	import Photograb from './components/Photograb';
 	export default {
 		components: {
     		'panel': Panel,
-    		'botton-tabs': BottomTabs
+    		'botton-tabs': BottomTabs,
+			'photograb': Photograb,
  		}
 	}
 </script>
