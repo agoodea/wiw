@@ -9,6 +9,8 @@
 		    </div>
         <f7-button big color="red" v-on:click="saveImg();">save photo</f7-button>
         <f7-button big color="red" v-on:click="thereCav();">giv cam</f7-button>
+        <f7-button big raised color="blue" v-on:click="openFilePicker();">giv pic</f7-button>
+
     </div>
   </section>
 
@@ -16,17 +18,17 @@
 
 <script lang="js">
 
-  function setOptions() {
+  function setOptions(srcType) {
      var options = { 
       quality: 50,
       destinationType: Camera.DestinationType.FILE_URI,
-      sourceType: Camera.PictureSourceType.CAMERA,
+      sourceType: srcType,
       encodingType: Camera.EncodingType.JPEG,
       mediaType: Camera.MediaType.PICTURE,
       allowEdit: false,
       // correctOrientation: true,
       // saveToPhotoAlbum: true,
-      PictureSourceType: 0,
+      // PictureSourceType: 0,
       targetWidth: 400,
       targetHeight: 300,
 
@@ -54,20 +56,37 @@
         alert("save success!");
       },
       getCamera: function () {
-			  navigator.camera.getPicture(this.onSuccess, function () { (err) => alert(err); }, setOptions());
+			  navigator.camera.getPicture(this.onSuccess, function () { (err) => alert(err); }, setOptions(Camera.PictureSourceType.Camera));
 		  },
       thereCav: function () {
         let cam = document.querySelectorAll(".cordova-camera-capture")[0];
-        console.log(cam);
         cam.style.position = "fixed";
         cam.style.top = "100px";
 
         
       },
+      openFilePicker: function(selection) {
+
+          var srcType = Camera.PictureSourceType.SAVEDPHOTOALBUM;
+          var options = setOptions(srcType);
+          // var func = createNewFileEntry;
+
+          navigator.camera.getPicture(function cameraSuccess(imageUri) {
+
+              var image = document.getElementById('myImage');
+              // image.src = "data:image/jpeg;base64," + imageUri;
+              image.src = imageUri;
+
+          }, function cameraError(error) {
+              alert("Unable to obtain picture: " + error, "app");
+
+          }, options);
+      },
       onSuccess: function(imageURI) {
 	      var image = document.getElementById('myImage');
-	      image.src = "data:image/jpeg;base64," + imageURI;
-        debugger;
+	      // image.src = "data:image/jpeg;base64," + imageURI;
+	      image.src = imageURI;
+        
         photoObj.fileUri = imageURI;
         photoObj.fileImg64 = image.src;
         // console.log(blob);
@@ -86,22 +105,34 @@
     }
 }
 
+
+
 function createNewFileEntry(imgUri) {
-    window.resolveLocalFileSystemURL(cordova.file.cacheDirectory, function success(dirEntry) {
+    window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function success(dirEntry) {
 
         // JPEG file
-        let fileName = "gdApp_"+ Math.random().toString(36) + ".jpg";
+        let now = Date.now();
+        alert(now);
+        alert(cordova.file.dataDirectory);
+        alert(cordova.file.cashDirectory);
+        alert(cordova.file.externalDataDirectory);
+        let fileName = "gdapp_" + now.toString() + ".jpeg";
         dirEntry.getFile(fileName, { create: true, exclusive: false }, function (fileEntry) {
 
+            alert(fileName);
             // Do something with it, like write to it, upload it, etc.
             writeFile(fileEntry, imgUri);
             alert("#1 got file: " + fileEntry.fullPath);
-            alert("#1_1 got file: " + fileEntry);
+            // alert("#1 got file: " + fileEntry.fullPath);
+            // for (var key in fileEntry) {
+            //   alert("#1_1 got file: " + fileEntry[key]);  
+            // }
+            
             // displayFileData(fileEntry.fullPath, "File copied to");
 
-        }, (err) => console.log(err));
+        }, (err) => alert(err));
 
-    }, (err) => console.log(err));
+    }, (err) => alert(err));
 }
 
 function getFileEntry(imgUri) {
@@ -125,7 +156,12 @@ function writeFile(fileEntry, dataObj) {
 
         fileWriter.onwriteend = function() {
             alert("Successful file write...");
-            readFile(fileEntry);
+            if (dataObj.type == "image/png") {
+                readBinaryFile(fileEntry);
+            }
+            else {
+                readFile(fileEntry);
+            }
         };
 
         fileWriter.onerror = function (e) {
@@ -135,7 +171,7 @@ function writeFile(fileEntry, dataObj) {
         // If data object is not passed in,
         // create a new Blob instead.
         if (!dataObj) {
-            dataObj = new Blob(['some file data'], { type: 'text/plain' });
+            // dataObj = new Blob(['some file data'], { type: 'text/plain' });
         }
 
         fileWriter.write(dataObj);
@@ -144,6 +180,25 @@ function writeFile(fileEntry, dataObj) {
 
 function onErrorLoadFs(err) {
   console.log(err);
+}
+
+function readBinaryFile(fileEntry) {
+
+    fileEntry.file(function (file) {
+        var reader = new FileReader();
+
+        reader.onloadend = function() {
+
+            console.log("Successful file write: " + this.result);
+            // displayFileData(fileEntry.fullPath + ": " + this.result);
+
+            var blob = new Blob([new Uint8Array(this.result)], { type: "image/png" });
+            // displayImage(blob);
+        };
+
+        reader.readAsArrayBuffer(file);
+
+    }, (err) => {alert(err);});
 }
 
 function getSampleFile(params) {
