@@ -1,16 +1,37 @@
 <template lang="html">
-
-  <!-- <f7-toolbar bottom scrollable>
-    <f7-link>Left Link</f7-link>
-    <f7-link>Right Link</f7-link>
-</f7-toolbar> -->
-<f7-toolbar tabbar bottom labels>
-    <f7-link tab-link="#tab1" class="bottom-tabs">Tab 1</f7-link>
-  <f7-link tab-link="#tab2" class="bottom-tabs">Tab 2</f7-link>
-  <f7-link tab-link="#tab3" class="bottom-tabs">Tab 3</f7-link>
-
-</f7-toolbar>
-
+<div class="toolbar toolbar-bottom tabbar">
+  <div class="toolbar-inner">
+    <a href="#" class="tab-link" data-tab="#tab1">
+      <!-- <f7-icon if-ios="f7:home" if-material="material:home_fill"></f7-icon> -->
+      <i class="f7-icons">home</i>
+    </a>
+    <a href="#" class="tab-link" data-tab="#tab2">
+      <!-- <f7-icon if-material="material:images_fill"></f7-icon> -->
+      <i class="f7-icons">images</i>
+    </a>
+    <a href="#" class="tab-link" data-tab="#tab3">
+      <!-- <f7-icon if-material="material:add_round_fill"></f7-icon> -->
+      <i class="f7-icons">add_round</i>
+    </a>
+  </div>
+</div>
+<!-- 
+      <f7-toolbar tabbar labels>
+        <f7-link icon="iconfont icon-ios7homeoutline" tab-link="#home" active></f7-link>
+        <f7-link icon="iconfont icon-ios7chatbubbleoutline"  tab-link="#contacts"></f7-link>
+        <f7-link icon="iconfont icon-ios7gearoutline"  tab-link="#settings"></f7-link>
+    </f7-toolbar>
+    <f7-tabs>
+      <f7-tab id="home" active v-on:click="tabActived('home')">
+        <home-view></home-view>  
+      </f7-tab>
+      <f7-tab id="contacts" v-on:click="tabActived('contacts')">
+        <contacts-view></contacts-view>
+      </f7-tab>
+      <f7-tab id="settings" v-on:click="tabActived('settings')">
+        <settings-view></settings-view>
+      </f7-tab>
+    </f7-tabs> -->
 </template>
 
 <script lang="js">
@@ -26,6 +47,9 @@
       }
     },
     methods: {
+      tabActived(tab) {
+      this.activedTab = tab
+    }
 
     },
     computed: {

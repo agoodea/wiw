@@ -7,6 +7,11 @@ import Framework7 from 'framework7'
 // Import F7 Vue Plugin
 import Framework7Vue from 'framework7-vue'
 
+const $$ = Dom7;
+
+// import firebase from 'firebase';
+// import * as firebase from "firebase";
+
 // Import F7 iOS Theme Styles
 /* import Framework7Theme from 'framework7/dist/css/framework7.ios.min.css'
 import Framework7ThemeColors from 'framework7/dist/css/framework7.ios.colors.min.css'*/
@@ -17,7 +22,7 @@ import Framework7ThemeColors from 'framework7/dist/css/framework7.material.color
 
 // Import App Custom Styles
 import AppStyles from './assets/sass/main.scss'
-
+import AppStyles from './assets/css/framework7-icons.css'
 // Import Routes
 import Routes from './routes.js'
 
@@ -26,6 +31,18 @@ import App from './main.vue'
 
 // Init F7 Vue Plugin
 Vue.use(Framework7Vue)
+
+var config = {
+    apiKey: "AIzaSyCbKzLmzVh-HRZuItsYYBHyMWvIOna_Dn0",
+    authDomain: "who-is-who-80223.firebaseapp.com",
+    databaseURL: "https://who-is-who-80223.firebaseio.com",
+    projectId: "who-is-who-80223",
+    storageBucket: "who-is-who-80223.appspot.com",
+    messagingSenderId: "443249798545"
+};
+firebase.initializeApp(config);
+
+// Vue.use(firebase);
 
 // Init App
 new Vue({

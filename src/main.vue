@@ -27,16 +27,27 @@
 				<!-- Pages -->
 				<f7-pages>
 					<f7-page>
-						<photograb></photograb>
+						<f7-tabs>
+							<f7-tab id="tab1" active>Tab 1 content...</f7-tab>
+							<f7-tab id="tab2">
+								tab 2c ontent
+							</f7-tab>
+							<f7-tab id="tab3">
+								<photograb></photograb>
+							</f7-tab>
+						</f7-tabs>
+						
 					</f7-page>
 				</f7-pages>
 			</f7-view>
+
 		</f7-views>
-	
+
 	</div>
 </template>
 
 <script>
+	console.log("firebase ", firebase);
 	import Panel from './components/panel';
 	import BottomTabs from './components/bottomTabs';
 	import Photograb from './components/Photograb';
@@ -48,3 +59,4 @@
  		}
 	}
 </script>
+

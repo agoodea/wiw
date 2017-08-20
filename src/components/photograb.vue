@@ -12,6 +12,11 @@
         <f7-button big raised color="blue" v-on:click="openFilePicker();">giv pic</f7-button>
 
     </div>
+      <div>
+  <!-- <f7-fab color="pink" v-on:click="saveImg();">
+     <i class="f7-icons">add_round_fill</i>
+  </f7-fab> -->
+</div>
   </section>
 
 </template>

@@ -1,5 +1,19 @@
-<div>
-    <button v-on:click="alert('make photo');">make photo</button>
-    <button v-on:click="alert('take photo');">take photo</button>
-    <button v-on:click="alert('save photo');">save photo</button>
-</div>
+<template lang="html">
+    
+    <f7-toolbar tabbar labels>
+        <f7-link icon="iconfont icon-ios7homeoutline" tab-link="#home" active></f7-link>
+        <f7-link icon="iconfont icon-ios7chatbubbleoutline"  tab-link="#contacts"></f7-link>
+        <f7-link icon="iconfont icon-ios7gearoutline"  tab-link="#settings"></f7-link>
+    </f7-toolbar>
+    <f7-tabs>
+      <f7-tab id="home" active v-on:click="tabActived('home')">
+        <home-view></home-view>  
+      </f7-tab>
+      <f7-tab id="contacts" v-on:click="tabActived('contacts')">
+        <contacts-view></contacts-view>
+      </f7-tab>
+      <f7-tab id="settings" v-on:click="tabActived('settings')">
+        <settings-view></settings-view>
+      </f7-tab>
+    </f7-tabs>
+</template>
