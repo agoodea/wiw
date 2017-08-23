@@ -5,6 +5,13 @@ export default [{
     {
         path: '/form/',
         component: require('./assets/vue/pages/form.vue')
+    },
+    {
+        path: '/',
+        meta: {
+            requiresAuth: true
+        }
+        // component: require('./assets/vue/pages/form.vue')
     }
     // ,
     // {

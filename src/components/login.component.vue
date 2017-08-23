@@ -1,5 +1,5 @@
 <template>
-  <f7-page no-navbar no-toolbar no-swipeback layout="white">
+  <f7-page no-navbar no-toolbar no-swipeback layout="green">
 
     <!-- Title -->
     <f7-block style="text-align: center; font-size: 25px;">{{!$root.user ? text.titleSignIn : text.titleSignOut}}</f7-block>
@@ -77,7 +77,7 @@
       checkYourInbox: 'Please check your inbox.',
       signOutDone: 'Sign out done',
       accountCreated: 'Account created',
-      error: 'Error',
+      error: 'Error!!',
       errorOffline: 'This action is offline not possible.',
       errorNoEmail: 'Please enter your email address.',
       errorNoPassword: 'Please enter a password.',
@@ -126,7 +126,7 @@
       }
     }
   }
-
+  
   export default  {
     name: 'login-component',
     props: [],
@@ -158,9 +158,10 @@
         window.f7.views.map((view, id) => {
           if (view.selector === window.localStorage.requestedView) viewId = id
         })
-        debugger
-        window.f7.views.main.reloadPage()
-        window.f7.getCurrentView().router.back();
+        // debugger
+        // window.f7.views.main.reloadPage()
+        // debugger
+        // window.f7.getCurrentView().router.back();
         // window.f7.views.leftPanelView.router.back()
         // this.$router.load({url: '/about/'})
         // window.f7.views[viewId || 'main'].router.back()
@@ -188,10 +189,12 @@
             })
             // On error, show alert
             .catch(err => {
+              // debugger
               // Hide loading indicator
               window.f7.hideIndicator()
               // Shoe error alert
               window.f7.alert(this.text.firebaseErrors[err.code], this.text.error)
+              window.f7.alert('#1')
             })
         }
       },
@@ -205,8 +208,6 @@
         this.mode = 'signOut'
         // Show requested URL or navigate back
         let viewId = null
-        debugger
-        this.$root.$emit('is-auth', true);
         window.f7.views.map((view, id) => {
           if (view.selector === window.localStorage.requestedView) viewId = id
         })
@@ -219,7 +220,13 @@
             })
           })
         } else {
-          window.f7.views.main.router.back()
+          // window.f7.views.main.router.back()
+        //  debugger
+        //  window.f7.views.main.router.back()
+        
+        //  this.$router.reloadPage();
+         this.$router.back();
+        //  mainView.router.reloadPage()
         }
         // Reset local storage
         window.localStorage.removeItem('requestedView')
@@ -342,6 +349,9 @@
 				
     },
     computed: {
+    //   mode() {
+    //     return this.$root.user ? 'signOut' : 'signIn'
+		// }
 
     }
 }
