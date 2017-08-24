@@ -28,17 +28,6 @@
 				<!-- <f7-navbar> -->
 				<!-- Pages -->
 				<f7-pages>
-					<f7-page v-if="!isAu">
-					
-						<!-- <f7-list> -->
-							<h1>dsasdfasdfasd</h1>
-							<loginscreen></loginscreen>
-							<!-- <f7-list-item  v-if="true" link="/login/" title="login"></f7-list-item>
-							<f7-list-item link="/form/" title="Form" link-view="#main-view"></f7-list-item> -->
-							<!-- <f7-list-item link="/dynamic-route/blog/45/post/125/?foo=bar#about" title="Dynamic Route"></f7-list-item> -->
-						<!-- </f7-list> -->
-				
-				  	</f7-page>
 					<f7-page v-if="isAu">
 						
 						<f7-tabs>
@@ -55,13 +44,13 @@
 				</f7-pages>
 				
 			</f7-view>
-			<f7-view id="login-view">
+			<f7-view id="login-view" v-if="!isAu">
 				<f7-pages>
 						<f7-page>
 							
 						<!-- <f7-list> -->
 							<h1>Login</h1>
-							<f7-list>
+							<f7-list class = "bottom">
             
 								<f7-list-item link="/login/" title="login"></f7-list-item>
 							</f7-list>
@@ -91,7 +80,7 @@ import authService from './services/auth.service.js'
 import Panel from './components/panel';
 import BottomTabs from './components/bottomTabs';
 import Photograb from './components/Photograb';
-import LoginScreen from './components/login';
+// import LoginScreen from './components/login';
 
 // alert("this.$root.data");
 // alert(this.$root);
@@ -109,7 +98,7 @@ export default {
 		'panel': Panel,
 		'botton-tabs': BottomTabs,
 		'photograb': Photograb,
-		'loginscreen': LoginScreen,
+		// 'loginscreen': LoginScreen,
 	},
 	data() {
 		return {
