@@ -268,6 +268,18 @@ mixins.manageGlobalDataObject = {
 let useMixins = Object.keys(mixins).map(mixin => mixins[mixin])
 
 var bus = new Vue();
+
+import VueLogger from 'vuejs-logger'
+
+const options = {
+    logLevel: 'debug',
+    // optional : defaults to false if not specified 
+    stringifyArguments: false,
+    // optional : defaults to false if not specified 
+    showLogLevel: false
+}
+
+Vue.use(VueLogger, options);
 // Vue.use(firebase);
 
 import authService from './services/auth.service.js'
@@ -276,13 +288,7 @@ let vm = new Vue({
     el: '#app',
     template: '<app/>',
     created() {
-        // window.f7.views[viewId || 'main'].router.load({ url: '/form/' })
-        // if (authService.isAutentificated()) {
-        //     this.$data.isAuth = true;
-        // } else {
-        //     this.$router.load({ url: '/login/' })
-        //     this.$data.isAuth = false;
-        // };
+        this.$log.info('test');
     },
     // data: data,
     mixins: useMixins,

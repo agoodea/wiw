@@ -33,6 +33,10 @@
 						<f7-tabs>
 							<f7-tab id="tab1" active>Tab 1 content...</f7-tab>
 							<f7-tab id="tab2">
+								<f7-button big red @click="saveAlbum">save album</f7-button>
+								<f7-button big red @click="getAlbum">get album</f7-button>
+								{{dataJson}}
+
 								<!-- {{ currenUser}} -->
 							</f7-tab>
 							<f7-tab id="tab3">
@@ -77,6 +81,7 @@
 
 // console.log("firebase ", firebase);
 import authService from './services/auth.service.js'
+import dataService from './services/data.service'
 import Panel from './components/panel';
 import BottomTabs from './components/bottomTabs';
 import Photograb from './components/Photograb';
@@ -102,8 +107,26 @@ export default {
 	},
 	data() {
 		return {
-			currentUser: {}
+			currentUser: {},
+			dataJson: {
+				is: "sfsdfdds",
+			},
 		};
+	},
+	methods: {
+		saveAlbum() {
+			let _album = true;
+			dataService.saveAlbum(_album);
+		},
+		getAlbum() {
+			dataService.getAlbum()
+			.then((data) => {
+				this.dataJson = JSON.stringify(data);	
+			})
+			.catch((err) => {
+				alert(err);
+			});
+		}
 	}
 }
 </script>

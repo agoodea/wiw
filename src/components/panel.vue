@@ -17,12 +17,14 @@
 					<f7-page>
             
 						<f7-list>
-              <f7-list-item title="Item 1" badge="5" badge-color="red"></f7-list-item>
-              <f7-list-item title="Item 2" badge="3" badge-color="red"></f7-list-item>
-              <f7-list-item title="Items Divider" divider></f7-list-item>
-              <f7-list-item title="Item 3"></f7-list-item>
-              <f7-list-item link="/about/" title="About" badge="5" badge-color="red"></f7-list-item>
-              <f7-list-item link="/contacts/" title="Contacts" badge="3" badge-color="red"></f7-list-item>
+              <f7-list-item title="My media" divider></f7-list-item>
+              
+              <f7-list-item link="/albums/" title="Albums" badge="5" badge-color="red" media ="<i class='f7-icon'></i>" ></f7-list-item>
+              <f7-list-item link="/images/" title="Images" badge="13" badge-color="red"></f7-list-item>
+              <f7-list-item link="/records/" title="Records" badge="13" badge-color="red"></f7-list-item>
+              <f7-list-item title="Settings" divider></f7-list-item>
+              <f7-list-item link="/profile/" title="Profile"></f7-list-item>
+              <f7-list-item link="/settings/" title="Settings"></f7-list-item>
             </f7-list>
 
 						<f7-button  v-on:click="logOut()" close-panel class = "logout-bottom"><i class="f7-icons size-50">logout</i></f7-button>
