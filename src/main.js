@@ -288,6 +288,7 @@ let vm = new Vue({
     el: '#app',
     template: '<app/>',
     created() {
+        alert('created mainjs');
         this.$log.info('test');
     },
     // data: data,

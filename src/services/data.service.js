@@ -18,15 +18,22 @@ let album = {
 
 export default {
 
-    getAlbums() {
-
-    },
-    getAlbum() {
-        let fileData;
-        let folderpath = "/albums/";
-        let filename = "album.json";
+    getFile(filename, folderpath) {
         let promise = new Promise((resolve, reject) => {
 
+            readFromFile(filename, folderpath, function(data) {
+                let fileData = data;
+                resolve(fileData);
+            });
+
+        });
+
+        // this.$log.debug('from file', fileData);
+        return promise;
+    },
+    getAlbum(fileName, filePath) {
+        let fileData;
+        let promise = new Promise((resolve, reject) => {
             readFromFile(filename, function(data) {
                 fileData = data;
                 resolve(fileData);
@@ -84,11 +91,10 @@ function writeToFile(fileName, data, folderpath) {
     }
 }
 
-function readFromFile(fileName, cb) {
+function readFromFile(fileName, filePath, cb) {
 
     try {
-        var pathToFile = cordova.file.externalDataDirectory + fileName;
-
+        var pathToFile = cordova.file.externalDataDirectory + filePath + fileName;
         window.resolveLocalFileSystemURL(pathToFile, function(fileEntry) {
             fileEntry.file(function(file) {
                 var reader = new FileReader();
@@ -102,6 +108,7 @@ function readFromFile(fileName, cb) {
         }, errorHandler.bind(null, fileName));
     } catch (error) {
         alert(error);
+        throw error;
 
     }
 }
@@ -131,6 +138,6 @@ var errorHandler = function(fileName, e) {
             msg = 'Unknown error';
             break;
     };
-
+    alert(`Error  ${fileName}:  ${msg}`)
     console.log('Error (' + fileName + '): ' + msg);
 }

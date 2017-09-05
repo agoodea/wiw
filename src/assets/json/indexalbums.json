@@ -1,0 +1,16 @@
+{
+    "id": 1,
+    "albums": [{
+            "id": "01",
+            "name": "Happy birthday",
+            "fileName": "happyday.json",
+            "created": "01.04.2017"
+        },
+        {
+            "id": "02",
+            "name": "Who is who",
+            "fileName": "wow.json",
+            "created": "03.02.2017"
+        }
+    ]
+}
