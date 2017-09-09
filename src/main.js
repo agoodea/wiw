@@ -267,7 +267,7 @@ mixins.manageGlobalDataObject = {
 
 let useMixins = Object.keys(mixins).map(mixin => mixins[mixin])
 
-var bus = new Vue();
+// var bus = new Vue();
 
 import VueLogger from 'vuejs-logger'
 
@@ -288,7 +288,6 @@ let vm = new Vue({
     el: '#app',
     template: '<app/>',
     created() {
-        alert('created mainjs');
         this.$log.info('test');
     },
     // data: data,

@@ -1,7 +1,7 @@
 <template lang="html">
 <div class="toolbar toolbar-bottom tabbar">
   <div class="toolbar-inner">
-    <a href="#" class="tab-link" data-tab="#tab1">
+    <a href="#" class="tab-link active" data-tab="#mainview">
       <!-- <f7-icon if-ios="f7:home" if-material="material:home_fill"></f7-icon> -->
       <i class="f7-icons">home</i>
     </a>

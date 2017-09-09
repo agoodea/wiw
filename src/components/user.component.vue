@@ -1,60 +1,132 @@
 <template>
-  <f7-page no-navbar no-toolbar no-swipeback layout="green">
+  <f7-login-screen id="login-screen">
+    <f7-view navbar-through :dynamic-navbar="true">
+      <f7-navbar title="Account" sliding theme="deeporange">
+        <f7-nav-right>
+          <f7-link class="close-login-screen">
 
-    <!-- Title -->
-    <f7-block style="text-align: center; font-size: 25px;">{{!$root.user ? text.titleSignIn : text.titleSignOut}}</f7-block>
+            <f7-icon f7="close_round" size="35px" color="#c0392b"></f7-icon>
+          </f7-link>
+        </f7-nav-right>
+      </f7-navbar>
+      <f7-pages>
+        <!-- <f7-page no-navbar no-toolbar no-swipeback layout="blue"> -->
+        <f7-page layout="blue" v-if="!editProfileMode">
+          <!-- Form for email sign in / registration / password reset -->
+          <f7-list form id="app-framework-login-screen" inset v-if="!$root.user && ((mode === 'signIn') ||  (mode === 'registration'))">
+            <f7-list-item v-if="(mode === 'signIn') || (mode === 'registration')">
+              <f7-label>{{text.email}}</f7-label>
+              <f7-input type="email" :placeholder="text.email" v-model="email" />
+            </f7-list-item>
+            <f7-list-item v-if="(mode === 'signIn') || (mode === 'registration')">
+              <f7-label>{{text.password}}</f7-label>
+              <f7-input type="password" :placeholder="text.password" v-model="password" />
+            </f7-list-item>
+            <f7-list-item v-if="(mode === 'registration')">
+              <f7-label>{{text.password}}</f7-label>
+              <f7-input type="password" :placeholder="text.passwordConfirmation" v-model="passwordConfirmation" />
+            </f7-list-item>
+          </f7-list>
 
-    <!-- Sign in disabled alert -->
-    <!-- <f7-block inner inset v-if="mode === 'signIn'">{{text.currentlyDisabled}} {{mode}} {{mode === 'signIn'}}</f7-block> -->
+          <!-- Email sign in buttons -->
+          <f7-block v-if="mode === 'signIn'">
+            <f7-button big raised color="green" fill @click="handleSignIn">{{text.signIn}}</f7-button big>
+          </f7-block>
 
-    <!-- Form for email sign in / registration / password reset -->
-    <f7-list form id="app-framework-login-screen" inset v-if="!$root.user && ((mode === 'signIn') ||  (mode === 'registration'))">
-      <f7-list-item v-if="(mode === 'signIn') || (mode === 'registration')">
-        <f7-label>{{text.email}}</f7-label>
-        <f7-input type="email" :placeholder="text.email" v-model="email" />
-      </f7-list-item>
-      <f7-list-item v-if="(mode === 'signIn') || (mode === 'registration')">
-        <f7-label>{{text.password}}</f7-label>
-        <f7-input type="password" :placeholder="text.password" v-model="password" />
-      </f7-list-item>
-      <f7-list-item v-if="(mode === 'registration')">
-        <f7-label>{{text.password}}</f7-label>
-        <f7-input type="password" :placeholder="text.passwordConfirmation" v-model="passwordConfirmation" />
-      </f7-list-item>
-    </f7-list>
+          <!-- Email registration buttons -->
+          <f7-block v-if="mode === 'signIn'">
+            <f7-button big raised color="green" @click="mode='registration'">{{text.createAccount}}</f7-button big>
+          </f7-block>
+          <f7-block v-if="mode === 'registration'">
+            <f7-button big raised color="green" fill @click="handleRegistration">{{text.handleRegistration}}</f7-button big>
+          </f7-block>
 
-    <!-- Email sign in buttons -->
-    <f7-block v-if="mode === 'signIn'">
-      <f7-button big raised color="green" fill @click="handleSignIn">{{text.signIn}}</f7-button big>
-    </f7-block>
+          <f7-block v-if="mode === 'signOut'" class="logout">
+            <f7-link @click="handleSignOut">
+              <f7-icon f7="logout" size="35px" color="deeporange"></f7-icon>
+              <!-- <i class="f7-icons" size="44px">logout</i> -->
+            </f7-link>
+          </f7-block>
+          <f7-block v-if="mode === 'signOut'">
+            Options
+            <div class="card">
+              <div class="card-content">
+                <!-- <a href="#" data-popup=".popup-about" class="open-popup">Open About Popup </a> -->
+                <div class="list-block">
+                  <f7-list>                
+                      <f7-list-item link="#" title="Profile" data-popup=".popup-profile" class="open-popup"
+                         media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>person</i>">
+                     </f7-list-item>
+                  </f7-list>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-content">
+                <div class="list-block">
+                  <f7-list>
+                    <f7-list-item link="/albums1/" title="Albums" badge="5" badge-color="red" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>film</i>"></f7-list-item>
+                    <f7-list-item link="/images/" title="Images" badge="13" badge-color="red" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>images</i>"></f7-list-item>
+                    <f7-list-item link="#" class="tab-link" data-tab="#tab3" title="Records" badge="13" badge-color="red" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>albums</i>"></f7-list-item>
+                  </f7-list>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-content">
+                <div class="list-block">
+                  <f7-list>
+                    <f7-list-item link="/settings/" title="Settings" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>settings</i>"></f7-list-item>
+                    <f7-list-item link="/profile/" title="Help" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>help</i>"></f7-list-item>
+                  </f7-list>
+                </div>
+              </div>
+            </div>
 
-    <!-- Email registration buttons -->
-    <f7-block v-if="mode === 'signIn'">
-      <f7-button big raised color="green" @click="mode='registration'">{{text.createAccount}}</f7-button big>
-    </f7-block>
-    <f7-block v-if="mode === 'registration'">
-      <f7-button big raised color="green" fill @click="handleRegistration">{{text.handleRegistration}}</f7-button big>
-    </f7-block>
+          </f7-block>
 
-    <!-- Email reset buttons -->
-    <f7-block v-if="mode === 'signIn'">
-      <f7-button big raised color="orange" @click="mode='reset'">{{text.resetPassword}}</f7-button big>
-    </f7-block>
-    <f7-block v-if="mode === 'reset'">
-      <f7-button big raised color="orange" fill @click="handleReset">{{text.handleReset}}</f7-button big>
-    </f7-block>
+        </f7-page>
+        <!-- <f7-page v-else>
+                  Profile
+                  <div class="card">
+                      <div class="card-content">
+                        <div class="list-block">
+                          <f7-list>
+                            <f7-list-item @click="editProfileMode = !editProfileMode" title="Profile" badge="5" badge-color="lightblue"
+                              media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>film</i>"></f7-list-item>
+                          </f7-list>
+                        </div>
+                      </div>
+                    </div>
+                </f7-page>  -->
+      </f7-pages>
+    </f7-view>
+    <f7-popup tablet-fullscreen class="popup-profile">
+      <!-- Popup content goes here -->
+       <f7-navbar title="Profile" sliding theme="yellow">
+        <f7-nav-right>
+          <f7-link class="close-popup">
 
-    <!-- Logout button -->
-    <f7-block v-if="mode === 'signOut'">
-      <f7-button big raised color="red" fill @click="handleSignOut">{{text.signOut}}</f7-button big>
-    </f7-block>
+            <f7-icon f7="close_round" size="35px" color="#c0392b"></f7-icon>
+          </f7-link>
+        </f7-nav-right>
+      </f7-navbar>
+      <div class="card">
+        <div class="card-content">
+          <!-- <div class="list-block">
+            <f7-list>
+              <f7-list-item class="close-popup">
+                <a href="#" class="close-popup">
+                  <i class='icon f7-icons color-deeporange' style='font-size: 35px;'>close</i>
+                </a>
 
-    <!-- Cancel button -->
-    <f7-block>
-      <f7-button big raised color="red" @click="cancel">{{text.cancel}}</f7-button big>
-    </f7-block>
-
-  </f7-page>
+              </f7-list-item>
+            </f7-list>
+          </div> -->
+        </div>
+      </div>
+    </f7-popup>
+  </f7-login-screen>
 </template>
 <script lang="js">
   // Define text patterns
@@ -72,7 +144,7 @@
       signOut: 'Sign out',
       createAccount: 'Create new account',
       resetPassword: 'Reset your password',
-      cancel: 'Cancel',
+      cancel: 'Back',
       emailSent: 'Email sent',
       checkYourInbox: 'Please check your inbox.',
       signOutDone: 'Sign out done',
@@ -139,7 +211,8 @@
         password: '',
         passwordConfirmation: '',
         mode: '',
-        text: {}
+        text: {},
+        editProfileMode: false,
       }
     },
     created() {
@@ -158,16 +231,6 @@
         window.f7.views.map((view, id) => {
           if (view.selector === window.localStorage.requestedView) viewId = id
         })
-        // debugger
-        // window.f7.views.main.reloadPage()
-        // debugger
-        // window.f7.getCurrentView().router.back();
-        // window.f7.views.leftPanelView.router.back()
-        // this.$router.load({url: '/about/'})
-        // window.f7.views[viewId || 'main'].router.back()
-        // window.f7.getCurrentView().router.refreshPage();
-        // window.f7.views[viewId || 'main'].router.load({url: '/form/'})
-        // Reset local storage
         window.localStorage.removeItem('requestedView')
         window.localStorage.removeItem('requestedUrl')
       },
@@ -189,7 +252,7 @@
             })
             // On error, show alert
             .catch(err => {
-              // debugger
+               debugger
               // Hide loading indicator
               window.f7.hideIndicator()
               // Shoe error alert
@@ -219,15 +282,7 @@
               window.f7.views.main.router.load({url: url})
             })
           })
-        } else {
-          // window.f7.views.main.router.back()
-        //  debugger
-        //  window.f7.views.main.router.back()
-        
-        //  this.$router.reloadPage();
-         this.$router.back();
-        //  mainView.router.reloadPage()
-        }
+        } 
         // Reset local storage
         window.localStorage.removeItem('requestedView')
         window.localStorage.removeItem('requestedUrl')
@@ -242,14 +297,17 @@
             window.f7.views.map((view, id) => {
               if (view.selector === window.localStorage.requestedView) viewId = id
             })
-            window.f7.views[viewId || 'main'].router.back()
+            // window.f7.views[viewId || 'main'].router.back()
             // Show notification
             window.f7.addNotification({
               title: this.text.signOut,
               message: this.text.signOutDone,
               hold: 3000,
               closeIcon: false
-            })
+            });
+            debugger
+           myApp.loginScreen();
+
           })
       },
       handleRegistration: function () {
@@ -357,8 +415,13 @@
 }
 </script>
 
-<style scoped lang="scss">
-  .login-component {
-
-  }
+<style scoped lang="sass">
+.login-component
+.page
+  .content-block
+  .logout
+    position: absolute
+    left: calc(50% - 35px)
+    bottom: 0
+    margin: 20px 0
 </style>

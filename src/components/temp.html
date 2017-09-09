@@ -1,19 +1,57 @@
-<template lang="html">
-    
-    <f7-toolbar tabbar labels>
-        <f7-link icon="iconfont icon-ios7homeoutline" tab-link="#home" active></f7-link>
-        <f7-link icon="iconfont icon-ios7chatbubbleoutline"  tab-link="#contacts"></f7-link>
-        <f7-link icon="iconfont icon-ios7gearoutline"  tab-link="#settings"></f7-link>
-    </f7-toolbar>
-    <f7-tabs>
-      <f7-tab id="home" active v-on:click="tabActived('home')">
-        <home-view></home-view>  
-      </f7-tab>
-      <f7-tab id="contacts" v-on:click="tabActived('contacts')">
-        <contacts-view></contacts-view>
-      </f7-tab>
-      <f7-tab id="settings" v-on:click="tabActived('settings')">
-        <settings-view></settings-view>
-      </f7-tab>
-    </f7-tabs>
-</template> Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga tenetur itaque praesentium? Tenetur ex, reprehenderit ratione alias fugit odio at aperiam in quod dicta dolore harum saepe! A, sit placeat.
+<f7-view>
+    <f7-pages>
+        <f7-page no-navbar no-toolbar no-swipeback layout="blue">
+
+            <!-- Title -->
+            <f7-block style="text-align: center; font-size: 25px;">{{!$root.user ? text.titleSignIn : text.titleSignOut}}</f7-block>
+
+            <!-- Form for email sign in / registration / password reset -->
+            <f7-list form id="app-framework-login-screen" inset v-if="!$root.user && ((mode === 'signIn') ||  (mode === 'registration'))">
+                <f7-list-item v-if="(mode === 'signIn') || (mode === 'registration')">
+                    <f7-label>{{text.email}}</f7-label>
+                    <f7-input type="email" :placeholder="text.email" v-model="email" />
+                </f7-list-item>
+                <f7-list-item v-if="(mode === 'signIn') || (mode === 'registration')">
+                    <f7-label>{{text.password}}</f7-label>
+                    <f7-input type="password" :placeholder="text.password" v-model="password" />
+                </f7-list-item>
+                <f7-list-item v-if="(mode === 'registration')">
+                    <f7-label>{{text.password}}</f7-label>
+                    <f7-input type="password" :placeholder="text.passwordConfirmation" v-model="passwordConfirmation" />
+                </f7-list-item>
+            </f7-list>
+
+            <!-- Email sign in buttons -->
+            <f7-block v-if="mode === 'signIn'">
+                <f7-button big raised color="green" fill @click="handleSignIn">{{text.signIn}}</f7-button big>
+            </f7-block>
+
+            <!-- Email registration buttons -->
+            <f7-block v-if="mode === 'signIn'">
+                <f7-button big raised color="green" @click="mode='registration'">{{text.createAccount}}</f7-button big>
+            </f7-block>
+            <f7-block v-if="mode === 'registration'">
+                <f7-button big raised color="green" fill @click="handleRegistration">{{text.handleRegistration}}</f7-button big>
+            </f7-block>
+
+            <!-- Email reset buttons -->
+            <!-- <f7-block v-if="mode === 'signIn'">
+    <f7-button big raised color="orange" @click="mode='reset'">{{text.resetPassword}}</f7-button big>
+  </f7-block>
+  <f7-block v-if="mode === 'reset'">
+    <f7-button big raised color="orange" fill @click="handleReset">{{text.handleReset}}</f7-button big>
+  </f7-block> -->
+
+            <!-- Logout button -->
+            <f7-block v-if="mode === 'signOut'">
+                <f7-button big raised color="red" fill @click="handleSignOut">{{text.signOut}}</f7-button big>
+            </f7-block>
+
+            <!-- Cancel button -->
+            <f7-block>
+                <f7-button big raised color="red" @click="cancel" class="close-login-screen">{{text.cancel}}</f7-button big>
+            </f7-block>
+
+        </f7-page>
+    </f7-pages>
+</f7-view>
