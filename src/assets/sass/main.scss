@@ -190,3 +190,12 @@ input {
     line-height: 48px;
     font-size: 14px;
 }
+
+.tabs .tab.active {
+    display: block;
+    padding-bottom: 70px;
+}
+
+.page-content {
+    padding-top: 10px !important
+}

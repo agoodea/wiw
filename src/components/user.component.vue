@@ -53,10 +53,9 @@
               <div class="card-content">
                 <!-- <a href="#" data-popup=".popup-about" class="open-popup">Open About Popup </a> -->
                 <div class="list-block">
-                  <f7-list>                
-                      <f7-list-item link="#" title="Profile" data-popup=".popup-profile" class="open-popup"
-                         media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>person</i>">
-                     </f7-list-item>
+                  <f7-list>
+                    <f7-list-item link="#" title="Profile" data-popup=".popup-profile" class="open-popup" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>person</i>">
+                    </f7-list-item>
                   </f7-list>
                 </div>
               </div>
@@ -65,9 +64,48 @@
               <div class="card-content">
                 <div class="list-block">
                   <f7-list>
-                    <f7-list-item link="/albums1/" title="Albums" badge="5" badge-color="red" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>film</i>"></f7-list-item>
-                    <f7-list-item link="/images/" title="Images" badge="13" badge-color="red" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>images</i>"></f7-list-item>
-                    <f7-list-item link="#" class="tab-link" data-tab="#tab3" title="Records" badge="13" badge-color="red" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>albums</i>"></f7-list-item>
+                    <!-- <f7-list-item link="/albums1/" title="Albums" badge="5" badge-color="red" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>film</i>"></f7-list-item>
+                    <f7-list-item link="#tab2" title="Images" badge="13" badge-color="red" class="tab-link" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>images</i>"></f7-list-item>
+                    <f7-list-item link="#" class="tab-link" data-tab="#tab3" title="Records" badge="13" badge-color="red" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>albums</i>"></f7-list-item> -->
+
+
+
+
+                    <a href="#main-view" class="item-link item-content tab-link close-login-screen">
+                      <div class="item-media">
+                        <i class='icon f7-icons color-deeporange' style='font-size: 35px;'>film</i>
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title">Albums</div>
+                        <div class="item-after">
+                          <span class="badge">4</span>
+                        </div>
+                      </div>
+                    </a>
+
+                    <a href="#tab2" class="item-link item-content tab-link close-login-screen">
+                      <div class="item-media">
+                        <i class='icon f7-icons color-deeporange' style='font-size: 35px;'>images</i>
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title">images</div>
+                        <div class="item-after">
+                          <span class="badge">5</span>
+                        </div>
+                      </div>
+                    </a>
+                    <a href="#tab4" class="item-link item-content tab-link close-login-screen">
+                      <div class="item-media">
+                        <i class='icon f7-icons color-deeporange' style='font-size: 35px;'>albums</i>
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title">Records</div>
+                        <div class="item-after">
+                          <span class="badge">23</span>
+                        </div>
+                      </div>
+                    </a>
+
                   </f7-list>
                 </div>
               </div>
@@ -87,23 +125,23 @@
 
         </f7-page>
         <!-- <f7-page v-else>
-                  Profile
-                  <div class="card">
-                      <div class="card-content">
-                        <div class="list-block">
-                          <f7-list>
-                            <f7-list-item @click="editProfileMode = !editProfileMode" title="Profile" badge="5" badge-color="lightblue"
-                              media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>film</i>"></f7-list-item>
-                          </f7-list>
+                    Profile
+                    <div class="card">
+                        <div class="card-content">
+                          <div class="list-block">
+                            <f7-list>
+                              <f7-list-item @click="editProfileMode = !editProfileMode" title="Profile" badge="5" badge-color="lightblue"
+                                media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>film</i>"></f7-list-item>
+                            </f7-list>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                </f7-page>  -->
+                  </f7-page>  -->
       </f7-pages>
     </f7-view>
     <f7-popup tablet-fullscreen class="popup-profile">
       <!-- Popup content goes here -->
-       <f7-navbar title="Profile" sliding theme="yellow">
+      <f7-navbar title="Profile" sliding theme="yellow">
         <f7-nav-right>
           <f7-link class="close-popup">
 
@@ -114,15 +152,15 @@
       <div class="card">
         <div class="card-content">
           <!-- <div class="list-block">
-            <f7-list>
-              <f7-list-item class="close-popup">
-                <a href="#" class="close-popup">
-                  <i class='icon f7-icons color-deeporange' style='font-size: 35px;'>close</i>
-                </a>
+              <f7-list>
+                <f7-list-item class="close-popup">
+                  <a href="#" class="close-popup">
+                    <i class='icon f7-icons color-deeporange' style='font-size: 35px;'>close</i>
+                  </a>
 
-              </f7-list-item>
-            </f7-list>
-          </div> -->
+                </f7-list-item>
+              </f7-list>
+            </div> -->
         </div>
       </div>
     </f7-popup>
@@ -419,6 +457,7 @@
 .login-component
 .page
   .content-block
+    margin-top: 60px
   .logout
     position: absolute
     left: calc(50% - 35px)

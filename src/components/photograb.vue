@@ -1,22 +1,43 @@
 <template lang="html">
 
   <section class="photograb">
-    <h1>photograb Component</h1>
-    <div>
-        <f7-button big raised color="red" v-on:click="getCamera()">make photo</f7-button>
-        <div>
-			    <img src="" id="myImage"></img>
-		    </div>
-        <f7-button big color="red" v-on:click="saveImg();">save photo</f7-button>
-        <f7-button big color="red" v-on:click="thereCav();">giv cam</f7-button>
-        <f7-button big raised color="blue" v-on:click="openFilePicker();">giv pic</f7-button>
+    <f7-list form>
+      <f7-list-item>
+         <f7-input type="text" placeholder="Title"   v-model="slide.title"/>
+      </f7-list-item>
+      <f7-list-item>
+        <div class="content-block">
+          <div class="content-block-inner">
+             <img src="" alt="" id="myImage"> 
 
-    </div>
-      <div>
-  <!-- <f7-fab color="pink" v-on:click="saveImg();">
-     <i class="f7-icons">add_round_fill</i>
-  </f7-fab> -->
-</div>
+          </div>
+        </div>
+      </f7-list-item>
+    </f7-list>
+
+      <!-- <div>
+            <f7-button big raised color="red" v-on:click="getCamera()">make photo</f7-button>
+            <div>
+              <img src="" id="myImage"></img>
+            </div>
+            <f7-button big color="red" v-on:click="saveImg();">save photo</f7-button>
+            <f7-button big color="red" v-on:click="thereCav();">giv cam</f7-button>
+            <f7-button big raised color="blue" v-on:click="openFilePicker();">giv pic</f7-button>
+
+      </div> -->
+
+      <div class="control-buttons"> 
+        <f7-list>
+          <f7-list-item>
+              <f7-button color="red" v-on:click="getCamera()"><f7-icon material="camera" size="35px"></f7-icon></f7-button>
+              <f7-button color="red" v-on:click="getCamera()"><f7-icon material="photo_library" size="35px"></f7-icon></f7-button>
+              <f7-button color="red" v-on:click="getCamera()"><f7-icon material="mic" size="35px"></f7-icon></f7-button>
+              <!-- <a href="#" class="link"><f7-icon material="camera" size="35px" v-on:click="getCamera()"></f7-icon></a> -->
+              <!-- <a href="#" class="link"><f7-icon material="photo_library" size="35px"></f7-icon></a>
+              <a href="#" class="link"><f7-icon material="mic" size="35px"></f7-icon></a> -->
+          </f7-list-item>
+        </f7-list>
+      </div>
   </section>
 
 </template>
@@ -53,8 +74,15 @@
     mounted() {
 
     },
-    data: function () {
-      return photoObj
+    data() {
+      return { 
+        photoObj,
+        slide: {
+          title: "",
+          img: "",
+          record: "",
+        }
+      }
     },
     methods: {
       saveImg: function() {
@@ -103,9 +131,20 @@
           var folderpath = cordova.file.externalDataDirectory + "/images/"; 
           //cordova.file.externalDataDirectory
           var filename = "gdapp_" + now.toString() + ".jpeg";
-          mfsService.post(folderpath, filename, imageURI, contentType);
-
+          mfsService.post(folderpath, filename, imageURI, contentType)
+            .then((result) => {
+                if(result.status) {
+                  alert(`photograb success #2`);
+                  alert(filename);
+                }
+            })
+            .catch((error) => {
+              if(!error.status) {
+                alert(`photograb  error #1 `);
+              }
+            });
           // createNewFileEntry(imageURI);
+
         } catch (error) {
           alert(error);
         }
@@ -186,13 +225,17 @@ function getSampleFile(params) {
 }
 </script>
 
-<style scoped lang="css">
-.photograb {
-  border: 4px solid red;
-}
+<style scoped lang="sass">
+.photograb
+  .control-buttons 
+    position: fixed
+    bottom: 0
+    padding: 0 35px
+    width: 100%
 
-.cordova-camera-capture {
-  position: fixed !important;
-  top: 100px;
-}
+
+.cordova-camera-capture 
+  position: fixed !important
+  top: 100px
+
 </style>

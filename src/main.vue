@@ -7,41 +7,54 @@
 
 		<!-- Left Panel -->
 		<!-- <panel></panel> -->
-
+		
 		<!-- Main Views -->
-		<f7-views>
-			<f7-view id="main-view" navbar-through :dynamic-navbar="true" main v-if="isAu" active>
-				<!-- Navbar -->
-				<nav-bar v-bind:is-au="isAu"></nav-bar>	
-				<!-- tabs	 -->
-				<botton-tabs></botton-tabs>
-				<!-- Pages -->
+		<f7-views tabs toolbar-fixed navbar-through :dynamic-navbar="true">
+			
+			<f7-view id="main-view" main active  class = "tab">
+				<nav-bar v-bind:is-au="isAu" fixed></nav-bar>
 				<f7-pages>
 					<f7-page v-if="isAu">
-						<f7-tabs>
-							<f7-tab id="tab1" active>
-								<albums-list v-bind:albums="albums"></albums-list>
-							</f7-tab>
-							<f7-tab id="tab2">
-								<f7-button big red @click="saveAlbum">save album</f7-button>
-							</f7-tab>
-							<f7-tab id="tab3">
-								<photograb></photograb>
-							</f7-tab>
-						</f7-tabs>
+						<albums-list v-bind:albums="albums"></albums-list>
 					</f7-page>
 				</f7-pages>
 
 			</f7-view>
-			<f7-view id="right-view" :dynamic-navbar="true" :animate-pages="false">
-
+			<f7-view id="tab2" class = "tab">
+				<nav-bar v-bind:is-au="isAu" fixed></nav-bar>
+				<f7-pages>
+					<f7-page v-if="isAu">
+						<f7-button big red @click="saveAlbum">save album</f7-button>
+					</f7-page>
+				</f7-pages>
 
 			</f7-view>
-			<!-- <f7-view id="login-main"> -->
-				
-			<!-- </f7-view> -->
+			<f7-view id="tab3" class = "tab">
+				<nav-bar v-bind:is-au="isAu" fixed></nav-bar>
+				<f7-pages>
+					<f7-page v-if="isAu">
+						<album-form v-on:newalbum="newAlbum"></album-form>
+					</f7-page>
+				</f7-pages>
 
+			</f7-view>
+			<f7-view id="tab4" class = "tab">
+				<nav-bar v-bind:is-au="isAu" fixed></nav-bar>
+				<f7-pages>
+					<f7-page v-if="isAu">
+						this is record view
+					</f7-page>
+				</f7-pages>
+
+			</f7-view>
+
+			<botton-tabs v-if="isAu"></botton-tabs>
+			<!-- <f7-view id="login-main"> -->
+
+			<!-- </f7-view> -->
+			
 		</f7-views>
+		
 		<user-screen></user-screen>
 	</div>
 </template>
@@ -55,10 +68,12 @@ import dataService from './services/data.service'
 // import Panel from './components/panel';
 import UserScreen from './components/user.component';
 import BottomTabs from './components/bottomTabs';
-import Photograb from './components/Photograb';
 import AlbumsList from './components/albums.list';
 import NavBar from './components/navbar.component';
+import AlbumForm from './components/album.form';
 // import LoginScreen from './components/login';
+import IndexAlbum from 'assets/json/indexalbums.json';
+
 
 // alert("this.$root.data");
 // alert(this.$root);
@@ -75,15 +90,15 @@ export default {
 	components: {
 		// 'panel': Panel,
 		'botton-tabs': BottomTabs,
-		'photograb': Photograb,
 		'albumsList': AlbumsList,
 		'user-screen': UserScreen,
 		'nav-bar': NavBar,
+		'album-form': AlbumForm,
 	},
 	data() {
 		return {
 			currentUser: {},
-			indexAlbums: {},
+			indexAlbums: IndexAlbum,
 			dataJson: {
 				is: "sfsdfdds",
 			},
@@ -95,23 +110,27 @@ export default {
 
 
 		// document.addEventListener("deviceready", this.getMediaData, false);
-		this.albums = [{
-			"id": "01",
-			"name": "1",
-			"fileName": "happyday.json",
-			"created": "01.04.2017"
-		},
-		{
-			"id": "02",
-			"name": "2",
-			"fileName": "wow.json",
-			"created": "03.02.2017"
-		}
-		];
+		// this.albums = [{
+		// 	"id": "01",
+		// 	"name": "1",
+		// 	"fileName": "happyday.json",
+		// 	"created": "01.04.2017"
+		// },
+		// {
+		// 	"id": "02",
+		// 	"name": "2",
+		// 	"fileName": "wow.json",
+		// 	"created": "03.02.2017"
+		// }
+		// ];
+		this.albums = this.indexAlbums.albums;
 		//get albums
 	},
 
 	methods: {
+		newAlbum(album) {
+			alert(JSON.stringify(album));
+		},
 		saveAlbum() {
 			let _album = true;
 			dataService.saveAlbum(_album);

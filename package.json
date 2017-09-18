@@ -51,8 +51,10 @@
         "loglevel": "^1.4.1",
         "material-design-icons": "^3.0.1",
         "vue": "^2.2.4",
+        "vue-audio": "0.0.7",
         "vue-class-component": "^5.0.2",
         "vue-router": "^2.7.0",
+        "vue-youtube-player": "^1.0.8",
         "vuejs-logger": "1.1.4"
     },
     "displayName": "gdApp",

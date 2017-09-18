@@ -4,13 +4,57 @@
             "id": "01",
             "name": "Happy birthday",
             "fileName": "happyday.json",
-            "created": "01.04.2017"
+            "created": "01.04.2017",
+            "cover": "http://lorempixel.com/300/300/"
         },
         {
             "id": "02",
             "name": "Who is who",
             "fileName": "wow.json",
-            "created": "03.02.2017"
+            "created": "03.02.2017",
+            "cover": "http://lorempixel.com/300/300/"
+        },
+        {
+            "id": "03",
+            "name": "Wild animals",
+            "fileName": "wa.json",
+            "created": "04.04.2017",
+            "cover": "http://lorempixel.com/300/300/"
+        },
+        {
+            "id": "04",
+            "name": "My lovely pet",
+            "fileName": "pet.json",
+            "created": "03.05.2017",
+            "cover": "http://lorempixel.com/300/300/"
+        },
+        {
+            "id": "05",
+            "name": "Ivanovy",
+            "fileName": "ivanovy.json",
+            "created": "23.04.2017",
+            "cover": "http://lorempixel.com/300/300/"
+        },
+        {
+            "id": "06",
+            "name": "Fruits",
+            "fileName": "fruits.json",
+            "created": "05.06.2017",
+            "cover": "http://lorempixel.com/300/300/"
+        },
+        {
+            "id": "07",
+            "name": "vegetables",
+            "fileName": "vegetables.json",
+            "created": "05.03.2017",
+            "cover": "http://lorempixel.com/300/300/"
+        },
+        {
+            "id": "08",
+            "name": "1st cass",
+            "fileName": "1stclass.json",
+            "created": "01.09.2017",
+            "cover": "http://lorempixel.com/300/300/"
         }
     ]
 }
