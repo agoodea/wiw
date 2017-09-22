@@ -1,40 +1,39 @@
 <template lang="html">
 
   <section class="photograb">
-    <f7-list form>
-      <f7-list-item>
-         <f7-input type="text" placeholder="Title"   v-model="slide.title"/>
-      </f7-list-item>
-      <f7-list-item>
-        <div class="content-block">
-          <div class="content-block-inner">
-             <img src="" alt="" id="myImage"> 
+          <f7-navbar sliding theme="red">
+          <f7-nav-left>
+            <f7-link class="close-popup">
+              <f7-icon f7="close_round" size="35px" color="#c0392b"></f7-icon>
+            </f7-link>
+          </f7-nav-left>
+          <f7-nav-center>New slide</f7-nav-center>
+          <f7-nav-right>
+            <f7-link @click="addSlide" class="close-popup" v-bind:disabled = "!isValid">
+              <f7-icon f7="check_round" size="35px" color="#c0392b"></f7-icon>
+            </f7-link>
+          </f7-nav-right>
+      </f7-navbar>
 
-          </div>
-        </div>
-      </f7-list-item>
-    </f7-list>
+      <div form class = "slide_title">
+         <input type="text" placeholder="Title"   v-model="slide.title" v-bind:class="{invalid: !isValid}"/>
+      </div>
 
-      <!-- <div>
-            <f7-button big raised color="red" v-on:click="getCamera()">make photo</f7-button>
-            <div>
-              <img src="" id="myImage"></img>
-            </div>
-            <f7-button big color="red" v-on:click="saveImg();">save photo</f7-button>
-            <f7-button big color="red" v-on:click="thereCav();">giv cam</f7-button>
-            <f7-button big raised color="blue" v-on:click="openFilePicker();">giv pic</f7-button>
+      <div> 
+        <progress max="100" v-bind:value="resValue" color="red"></progress>
+        <span id ="timerEl" style = "position: fixed; top: 30%; left: 20%;"> : </span>  
+      </div>
+  
 
-      </div> -->
 
+
+      <img src="" class="lazy slide-img"  id="myImage" style="display: none">
       <div class="control-buttons"> 
         <f7-list>
           <f7-list-item>
               <f7-button color="red" v-on:click="getCamera()"><f7-icon material="camera" size="35px"></f7-icon></f7-button>
-              <f7-button color="red" v-on:click="getCamera()"><f7-icon material="photo_library" size="35px"></f7-icon></f7-button>
-              <f7-button color="red" v-on:click="getCamera()"><f7-icon material="mic" size="35px"></f7-icon></f7-button>
-              <!-- <a href="#" class="link"><f7-icon material="camera" size="35px" v-on:click="getCamera()"></f7-icon></a> -->
-              <!-- <a href="#" class="link"><f7-icon material="photo_library" size="35px"></f7-icon></a>
-              <a href="#" class="link"><f7-icon material="mic" size="35px"></f7-icon></a> -->
+              <f7-button color="red" v-on:click="playRecord()"><f7-icon material="photo_library" size="35px"></f7-icon></f7-button>
+              <f7-button color="green" v-on:click="getRecord()"><f7-icon material="mic" size="35px"></f7-icon></f7-button>
           </f7-list-item>
         </f7-list>
       </div>
@@ -54,10 +53,10 @@
       mediaType: Camera.MediaType.PICTURE,
       allowEdit: false,
       // correctOrientation: true,
-      // saveToPhotoAlbum: true,
+      saveToPhotoAlbum: false,
       // PictureSourceType: 0,
-      targetWidth: 400,
-      targetHeight: 300,
+      //  targetWidth: 300,
+      //  targetHeight: 400,
 
       }
       return options;
@@ -74,17 +73,47 @@
     mounted() {
 
     },
+    created() {
+      this.mediaRec = null;
+      this.recTime = 0;
+      this.audioSrc = null;
+      this.recordSrc = "/android_asset/www/audio/1.amr";
+      this.recProcess = 2;
+      
+        
+    },
+    computed: {
+      // recProcess() {
+      //   return this.recordProcess;
+      // },
+      
+    },
     data() {
       return { 
         photoObj,
+        // recordProgress,
+        sound: {},
         slide: {
           title: "",
           img: "",
           record: "",
-        }
+        },
+        resValue: 10,
+        amr: "rec.amr"
       }
     },
     methods: {
+      
+
+      addSlide: function() {
+        this.$emit('newslide', {slide: this.slide, new: true});
+        this.slide = {
+          title: "",
+          img: "",
+          record: "",  
+        }
+      },
+
       saveImg: function() {
         console.log("data ", this.photoObj);
         alert("save success!");
@@ -101,119 +130,181 @@
 
           var srcType = Camera.PictureSourceType.SAVEDPHOTOALBUM;
           var options = setOptions(srcType);
-          // var func = createNewFileEntry;
 
           navigator.camera.getPicture(function cameraSuccess(imageUri) {
-
+              debugger
               var image = document.getElementById('myImage');
+              let src = "data:image/jpeg;base64," + imageUri;
               image.src = "data:image/jpeg;base64," + imageUri;
-              // image.src = imageUri;
+              image.style.display = "block";
 
           }, function cameraError(error) {
               alert("Unable to obtain picture: " + error, "app");
-
           }, options);
       },
       onSuccess: function(imageURI) {
-	      var image = document.getElementById('myImage');
+        var image = document.getElementById('myImage');
 	      image.src = "data:image/jpeg;base64," + imageURI;
-	      // image.src = imageURI;
-        
-        photoObj.fileUri = imageURI;
-        photoObj.fileImg64 = image.src;
-        // console.log(blob);
+        this.slide.img = "";
+        image.style.display = "block";
         try {
-          // alert('createNewFileEntry begin');
+ 
           let now = Date.now();
-          // To define the type of the Blob
           var contentType = "image/jpeg";
-          // if cordova.file is not available use instead :
-          var folderpath = cordova.file.externalDataDirectory + "/images/"; 
-          //cordova.file.externalDataDirectory
+          var folderpath = 'images'; 
           var filename = "gdapp_" + now.toString() + ".jpeg";
-          mfsService.post(folderpath, filename, imageURI, contentType)
+          mfsService.postImg(folderpath, filename, imageURI, contentType)
             .then((result) => {
+                alert(JSON.stringify(result));
                 if(result.status) {
-                  alert(`photograb success #2`);
-                  alert(filename);
+                  console.log(`photograb success #2`);
+
+                  this.slide.img = filename;
                 }
             })
             .catch((error) => {
               if(!error.status) {
-                alert(`photograb  error #1 `);
+                console.log(error.message);
               }
             });
-          // createNewFileEntry(imageURI);
-
         } catch (error) {
           alert(error);
         }
         
-      }
+      },
+      captureError: function(e) {
+        console.log('captureError' ,e);
+        console.log(e);
+      },
+      captureSuccess: function(e) {
+        // console.log('captureSuccess');
+        // console.dir(e);
+        alert(JSON.stringify(e[0]));
+        this.sound.file = e[0].localURL;
+        this.sound.filePath = e[0].fullPath;
+        alert(JSON.stringify(this.sound.file));
+        
 
+    
+      },
+      seekTo() {
+          console.log("seekTo()");
+          if (media1) {
+              media1.seekTo(15000);
+          }
+      },
+      getRecord() {
+        this.recordSrc = cordova.file.externalDataDirectory + "dg_amr1.amr";
+        let my_media = new Media(this.recordSrc, this.onSuccessRecord, this.onErrorRecord);
+        my_media.startRecord();
+        alert("start");
+        alert(JSON.stringify(my_media));
+        setTimeout(function() {
+            alert("stop????");
+            alert(JSON.stringify(my_media));
+            try {
+              my_media.stopRecord();
+              my_media.release();
+              alert("stop");
+            } catch (error) {
+              alert("error!!!");
+              alert(error);
+            }
+            
+        }, 5000);
+        alert("!!!");
+        let timerEl = document.getElementById("timerEl");
+        let mediaTimer = setInterval(function () {
+            // get media amplitude
+            let count = 0;
+            my_media.getCurrentAmplitude(
+                // success callback
+                function (amp) {
+                    count +=  amp;
+                    timerEl.textContent = count + " sec";
+                },
+                // error callback
+                function (e) {
+                    alert("Error getting amp=");
+                    alert(e);
+                }
+            );
+        }, 100);
+        // navigator.device.capture.captureAudio(this.captureSuccess,this.captureError,{limit:1, duration:10});
+      },
+      onSuccessRecord(e) {
+        alert("!eeeee!");
+        alert(e);
+      },
+      onErrorRecord(e) {
+        alert("err");
+        alert(JSON.stringify(e));
+      },
+
+
+      playRecord: function() {
+          // alert("#3");
+          // alert(JSON.stringify(this.sound.file));
+          if(!this.sound.file) {
+              navigator.notification.alert("Record a sound first.", null, "Error");
+              // alert("#2");
+              return;
+          }
+
+          try {
+              var media = new Media(this.sound.file, function(e) {
+                  media.release();
+              
+              }, function(err) {
+              });
+          } catch (error) {
+            alert("#4");
+          }
+          this.resValue = 20;
+          media.play();
+          let timerEl = document.getElementById("timerEl");
+          var mediaTimer = setInterval(function () {
+          // get media position
+              media.getCurrentPosition(
+                  // success callback
+                  function (position) {
+                  
+                      if (position > -1) {
+                          // this.recordProcess = position*100;
+                          // this.recProcess++;
+                          
+                          timerEl.textContent = position + " sec";
+                          // this.resValue += 12;
+                          alert(this.resValue);
+                          this.resValue = this.resValue + 10;
+                          
+                      }
+                  },
+                  // error callback
+                  function (e) {
+                      console.log("Error getting pos=" + e);
+                  }
+              );
+          }, 1000);
+      }
     },
     computed: {
+      validation: function () {
+        return {
+          title: !!this.slide.title.trim(),
+        }
+      },
+      isValid: function () {
+        var validation = this.validation
+        return Object.keys(validation).every(function (key) {
+          return validation[key]
+        })
+      },
 
     }
 }
 
 
-
-// function createNewFileEntry(imgUri) {
-//     window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function success(dirEntry) {
-
-//         // JPEG file
-//         let now = Date.now();
-//         alert(now);
-//         alert(cordova.file.dataDirectory);
-//         alert(cordova.file.cashDirectory);
-//         alert(cordova.file.externalDataDirectory);
-//         let fileName = "gdapp_" + now.toString() + ".jpeg";
-//         dirEntry.getFile(fileName, { create: true, exclusive: false }, function (fileEntry) {
-
-//             alert(fileName);
-//             // Do something with it, like write to it, upload it, etc.
-//             writeFile(fileEntry, imgUri);
-//             alert("#1 got file: " + fileEntry.fullPath);
-//             // alert("#1 got file: " + fileEntry.fullPath);
-//             // for (var key in fileEntry) {
-//             //   alert("#1_1 got file: " + fileEntry[key]);  
-//             // }
-            
-//             // displayFileData(fileEntry.fullPath, "File copied to");
-
-//         }, (err) => alert(err));
-
-//     }, (err) => alert(err));
-// }
-
-// function writeFile(fileEntry, dataObj) {
-//     // Create a FileWriter object for our FileEntry (log.txt).
-//     fileEntry.createWriter(function (fileWriter) {
-
-//         fileWriter.onwriteend = function() {
-//             alert("Successful file write...");
-//             if (dataObj.type == "image/png") {
-//                 readBinaryFile(fileEntry);
-//             }
-//             else {
-//                 readFile(fileEntry);
-//             }
-//         };
-
-//         fileWriter.onerror = function (e) {
-//             alert("Failed file write: " + e.toString());
-//         };
-
-//         // If data object is not passed in,
-//         // create a new Blob instead.
-//         if (!dataObj) {
-//             // dataObj = new Blob(['some file data'], { type: 'text/plain' });
-//         }
-
-//         fileWriter.write(dataObj);
-//     });
-// }
 
 function onErrorLoadFs(err) {
   console.log(err);
@@ -227,15 +318,91 @@ function getSampleFile(params) {
 
 <style scoped lang="sass">
 .photograb
+  height: 100vh
+  background-repeat: no-repeat
+  background-size: contain
+  width: 100%
+  height: 100%
+
   .control-buttons 
     position: fixed
     bottom: 0
     padding: 0 35px
     width: 100%
 
+  .slide_title
+    input
+      padding: 4px 10px
+      width: 100%;
+      font-size: 24px;
+      background: azure;
+      border: none;
+
+    .invalid
+      background: rgba(244, 67, 54, 0.17)
+
+
+.list-block 
+  margin: 0 auto
+
+.slide-img 
+  min-width: 100%
+  min-height: 100px
+  max-height: 80%
 
 .cordova-camera-capture 
   position: fixed !important
   top: 100px
+
+//colors
+$black_50: rgba(0, 0, 0, 0.5);
+$royal_blue: royalblue;
+$white: white;
+
+progress[value] 
+	appearance: none
+	border: none
+	width: 100%
+	height: 20px
+	background-color: whiteSmoke
+	//Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+	border-radius: 3px
+	//Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+	box-shadow: 0 2px 3px $black_50 inset
+	color: $royal_blue
+	position: relative
+	margin: 0 0 1.5em
+
+progress[value]::-webkit-progress-bar 
+	background-color: whiteSmoke
+	//Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+	border-radius: 3px
+	//Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+	box-shadow: 0 2px 3px $black_50 inset
+
+progress[value]::-webkit-progress-value 
+	position: relative
+	background-size: 35px 20px, 100% 100%, 100% 100%
+	//Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+	border-radius: 3px
+	animation: animate-stripes 5s linear infinite
+	&:after 
+		content: ''
+		position: absolute
+		width: 5px
+		height: 5px
+		top: 7px
+		right: 7px
+		background-color: $white
+		//Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+		border-radius: 100%
+	
+
+@keyframes animate-stripes 
+	100% 
+		background-position: -100px 0
+	
+
+progress::-webkit-progress-value 
 
 </style>

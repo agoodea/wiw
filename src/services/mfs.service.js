@@ -42,45 +42,38 @@ export default {
      * @param filename {String} The name of the file that will be created
      * @param content {Base64 String} Important : The content can't contain the following string (data:image/png[or any other format];base64,). Only the base64 string is expected.
      */
-    post(folderpath, filename, content, contentType) {
+    postImg(folderpath, filename, content, contentType) {
 
         let promise = new Promise((resolve, reject) => {
             // Convert the base64 string in a Blob
-            console.log("Convert the base64 string in a Blob");
             var DataBlob = b64toBlob(content, contentType);
-
-            console.log("Starting to write the file :3");
-            // console.log("Starting to write the file :3");
-
-            window.resolveLocalFileSystemURL(folderpath, function(dir) {
-                console.log("Access to the directory granted succesfully");
-                // console.log("Access to the directory granted succesfully");
-                dir.getFile(filename, { create: true }, function(file) {
-                    // console.log("File created succesfully.");
-                    console.log("File created succesfully.");
-                    file.createWriter(function(fileWriter) {
-                        console.log("Writing content to file");
-                        // console.log("Writing content to file");
-                        fileWriter.write(DataBlob);
-                        let result = {
-                            status: true,
-                            message: "File created succesfully.",
-                        }
-                        resolve(result);
-                    }, function() {
-                        let msg = 'Unable to save file in path ' + folderpath;
-                        let result = {
-                            status: false,
-                            message: msg,
-                        }
-                        console.log(msg);
-                        reject(result);
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(fileSystem) {
+                fileSystem.getDirectory(folderpath, { create: true, exclusive: false },
+                    function(dir) {
+                        dir.getFile(filename, { create: true }, function(file) {
+                            file.createWriter(function(fileWriter) {
+                                fileWriter.write(DataBlob);
+                                let result = {
+                                    status: true,
+                                    message: "File created succesfully.",
+                                }
+                                resolve(result);
+                            }, function() {
+                                let msg = 'Unable to save file in path ' + folderpath;
+                                let result = {
+                                    status: false,
+                                    message: msg,
+                                }
+                                reject(result);
+                            });
+                        });
+                    },
+                    function(error) {
+                        alert(error.code);
                     });
-                });
+            }, function(error) {
+                alert(error.code);
             });
-
-
-
         });
 
         return promise;

@@ -29,25 +29,8 @@
     </div>
     <f7-popup tablet-fullscreen class="popup-newslide">
         <!-- Popup content goes here -->
-      <f7-navbar sliding theme="red">
-          <f7-nav-left>
-            <f7-link class="close-popup">
-              <f7-icon f7="close_round" size="35px" color="#c0392b"></f7-icon>
-            </f7-link>
-          </f7-nav-left>
-          <f7-nav-center>New slide</f7-nav-center>
-          <f7-nav-right>
-            <f7-link>
-             <f7-icon f7="check_round" size="35px" color="#c0392b"></f7-icon>
-            </f7-link>
-          </f7-nav-right>
 
-        <!-- <f7-nav-right>
-          
-          
-        </f7-nav-right> -->
-      </f7-navbar>
-          <photograb></photograb>
+          <photograb  v-on:newslide="newslide"></photograb>
   </f7-popup>
 
     
@@ -89,6 +72,9 @@
       }
     },
     methods: {
+      newslide(result) {
+        alert(JSON.stringify(result.slide));
+      },
       save() {
         this.album.created = new Date().getTime();
         this.album.modified = new Date().getTime();
