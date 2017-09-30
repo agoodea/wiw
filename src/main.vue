@@ -9,7 +9,7 @@
 		<!-- <panel></panel> -->
 		
 		<!-- Main Views -->
-		<f7-views tabs toolbar-fixed navbar-through :dynamic-navbar="true">
+		<f7-views tabs toolbar-fixed :dynamic-navbar="true">
 			
 			<f7-view id="main-view" main active  class = "tab">
 				<nav-bar v-bind:is-au="isAu" fixed></nav-bar>
@@ -32,7 +32,7 @@
 			<f7-view id="tab3" class = "tab">
 				<nav-bar v-bind:is-au="isAu" fixed></nav-bar>
 				<f7-pages>
-					<f7-page v-if="isAu">
+					<f7-page v-if="isAu" class="album-container">
 						<album-form v-on:newalbum="newAlbum"></album-form>
 					</f7-page>
 				</f7-pages>
@@ -65,6 +65,7 @@
 // console.log("firebase ", firebase);
 import authService from './services/auth.service.js'
 import dataService from './services/data.service'
+import mfsService from './services/mfs.service'
 // import Panel from './components/panel';
 import UserScreen from './components/user.component';
 import BottomTabs from './components/bottomTabs';
@@ -107,7 +108,7 @@ export default {
 		};
 	},
 	created() {
-
+		mfsService.initMfs();
 
 		// document.addEventListener("deviceready", this.getMediaData, false);
 		// this.albums = [{

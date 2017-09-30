@@ -23,6 +23,7 @@ import Framework7ThemeColors from 'framework7/dist/css/framework7.material.color
 // Import App Custom Styles
 import AppStyles from './assets/sass/main.scss'
 import AppStyles from './assets/css/framework7-icons.css'
+import AppStyles from './assets/css/some.css'
 // Import Routes
 import Routes from './routes.js'
 

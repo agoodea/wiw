@@ -34,6 +34,28 @@ function b64toBlob(b64Data, contentType, sliceSize) {
     return blob;
 }
 
+function chepPath(path) {
+
+    try {
+        window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(fileSystem) {
+            fileSystem.getDirectory(path, { create: true, exclusive: false },
+                function(dir) {
+                    let msg = path + " success!"
+                        // alert(msg);
+                },
+                function(error) {
+                    alert(error.code);
+                });
+        }, function(error) {
+            alert(error.code);
+        });
+    } catch (error) {
+
+    }
+
+
+}
+
 export default {
     /**
      * Create a Image file according to its database64 content only.
@@ -77,5 +99,12 @@ export default {
         });
 
         return promise;
+    },
+
+    initMfs() {
+        let paths = ['images', 'records'];
+        paths.forEach((p) => {
+            chepPath(p)
+        });
     }
 }

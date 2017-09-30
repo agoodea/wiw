@@ -16,7 +16,34 @@
       <div>
       <span v-for="slide in slides">
         <!-- <f7-list-item> -->
-          <f7-card :title="slide.title" :content="slide.content" :footer="slide.footer"></f7-card>
+          <!-- <f7-card :title="slide.title" :content="slide.img" :footer="slide.imgData"></f7-card> -->
+          <!-- <div class="card demo-card-header-pic">
+            <div v-bind:style='{ backgroundImage: "url(" + slide.imgData + ")", }' valign="bottom" class="card-header color-white no-border"></div>
+            <div class="card-content">
+              <div class="card-content-inner">
+                <p class="color-gray">Posted on January 21, 2015</p>
+                <p class="color-gray">{{slide.img}}</p>
+                <p>{{slide.title}}</p>
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="#" class="link">Like</a>
+              <a href="#" class="link">Read more</a>
+            </div>
+          </div> -->
+          <div class="card facebook-card">
+            <div class="card-header no-border">
+              <!-- <div class="facebook-avatar"><img src="..." width="34" height="34"></div> -->
+              <div class="facebook-name">{{slide.title}}</div>
+              <div class="facebook-name">{{slide.img}}</div>
+            </div>
+            <div class="card-content"><img :src="slide.imgData"></div>
+            <div class="card-footer no-border">
+              <f7-button color=green @click="playRecord(slide.record)"><f7-icon material="play_arrow" size="35px"></f7-icon></f7-button>
+              <f7-button color=green @click = "getEditSlide(slide)" data-popup=".popup-newslide"  class="color-deeporange open-popup"><f7-icon material="mode_edit" size="25px"></f7-icon></f7-button>
+            </div>
+          </div>
+
         <!-- </f7-list-item> -->
       </span>
       </div>
@@ -24,14 +51,17 @@
     <div class="control-buttons">
       <p class="buttons-row">
         <a href="#" class="button button-big button-fill  color-green" v-on:click = "save()">Save album</a>
-        <a href="#" data-popup=".popup-newslide"  class="button button-big button-fill  color-deeporange open-popup">New slide</a>
+        <a href="#" data-popup=".popup-newslide"  class="button button-big button-fill  color-deeporange open-popup" @click = "clearEditSlide()">New slide</a>
       </p>        
     </div>
     <f7-popup tablet-fullscreen class="popup-newslide">
         <!-- Popup content goes here -->
-
-          <photograb  v-on:newslide="newslide"></photograb>
-  </f7-popup>
+          <photograb  v-on:newslide="newslide" v-bind:slide="editslide" :isNewSlide = "isNewSlide"></photograb>
+    </f7-popup>
+     <!-- <f7-popup tablet-fullscreen class="popup-editslide"> -->
+        <!-- Popup content goes here -->
+          <!-- <photograb  v-on:newslide="newslide" v-bind:slide="editslide" :isNewSlide = "false"></photograb>
+    </f7-popup> -->
 
     
 </div>
@@ -68,12 +98,44 @@
         slides: [],
         records: [],
         count: 0,
+        isNewSlide: true,
+        editslide: {
+                  title: "",
+                  img: "",
+                  record: "",
+                  imgData: "", 
+                },
 
       }
     },
     methods: {
+      getEditSlide(sl) {
+        this.isNewSlide = false;
+        this.editslide = sl;
+      },
+      clearEditSlide() {
+        this.isNewSlide = true;
+        this.editslide = {
+                  title: "",
+                  img: "",
+                  record: "",
+                  imgData: "", 
+                };
+      },
+      playRecord(record) {
+        let recordSrc = cordova.file.externalDataDirectory + record;
+        let my_media = new Media(recordSrc, function() {
+          // alert("success create media");
+        },
+        function() {
+          // alert("fail create media");
+        });
+        my_media.play();
+
+      },
       newslide(result) {
-        alert(JSON.stringify(result.slide));
+        if(result.new)
+          this.slides.push(result.slide);
       },
       save() {
         this.album.created = new Date().getTime();
@@ -216,6 +278,5 @@ textarea
     margin: 0 auto
   .right
     margin: 0
-
 
 </style>
