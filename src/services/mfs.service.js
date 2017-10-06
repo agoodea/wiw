@@ -10,7 +10,7 @@ import vue from "vue";
  * @see http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
  * @return Blob
  */
-function b64toBlob(b64Data, contentType, sliceSize) {
+function _b64toBlob(b64Data, contentType, sliceSize) {
     contentType = contentType || '';
     sliceSize = sliceSize || 512;
 
@@ -33,6 +33,7 @@ function b64toBlob(b64Data, contentType, sliceSize) {
     var blob = new Blob(byteArrays, { type: contentType });
     return blob;
 }
+
 
 function chepPath(path) {
 
@@ -64,11 +65,16 @@ export default {
      * @param filename {String} The name of the file that will be created
      * @param content {Base64 String} Important : The content can't contain the following string (data:image/png[or any other format];base64,). Only the base64 string is expected.
      */
+    b64toBlob(b64Data, contentType) {
+        return _b64toBlob(b64Data, contentType);
+    },
     postImg(folderpath, filename, content, contentType) {
+
+        debugger
 
         let promise = new Promise((resolve, reject) => {
             // Convert the base64 string in a Blob
-            var DataBlob = b64toBlob(content, contentType);
+            var DataBlob = _b64toBlob(content, contentType);
             window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(fileSystem) {
                 fileSystem.getDirectory(folderpath, { create: true, exclusive: false },
                     function(dir) {
@@ -79,6 +85,8 @@ export default {
                                     status: true,
                                     message: "File created succesfully.",
                                 }
+
+
                                 resolve(result);
                             }, function() {
                                 let msg = 'Unable to save file in path ' + folderpath;
@@ -101,8 +109,9 @@ export default {
         return promise;
     },
 
+
     initMfs() {
-        let paths = ['images', 'records'];
+        let paths = ['images', 'records', 'albums'];
         paths.forEach((p) => {
             chepPath(p)
         });

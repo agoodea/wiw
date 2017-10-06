@@ -27,13 +27,21 @@ import AppStyles from './assets/css/some.css'
 // Import Routes
 import Routes from './routes.js'
 
-// Import App Component
+// // Import App Component
 import App from './main.vue'
 
 // Init F7 Vue Plugin
 Vue.use(Framework7Vue)
 
-import VueProgressBar from 'vue-progressbar'
+import VueProgressBar from 'vue-progressbar';
+
+import moment from 'moment'
+
+Vue.filter('formatDate', function(value) {
+    if (value) {
+        return moment(value).format('DD/MM/YYYY')
+    }
+});
 
 Vue.use(VueProgressBar, {
     color: 'rgb(143, 255, 199)',
@@ -142,7 +150,10 @@ let mixins = {}
 mixins.manageGlobalDataObject = {
         // Set initial data
         data: {
-            data: {}
+            data: {},
+            settings: {
+                sync: false,
+            }
         },
         // Methods to add or remove data
         methods: {
@@ -185,11 +196,11 @@ mixins.manageGlobalDataObject = {
             // Use Firebase
 
             // Include scripts
-            // let firebase = require('firebase/app')
-            // if (process.env.USE_FIREBASE_AUTH === 'true') require('firebase/auth')
-            // if (process.env.USE_FIREBASE_DATABASE === 'true') require('firebase/database')
-            // if (process.env.USE_FIREBASE_STORAGE === 'true') require('firebase/storage')
-            // Initialize Firebase
+            let firebase = require('firebase/app')
+            require('firebase/auth')
+            require('firebase/database')
+            require('firebase/storage')
+                // Initialize Firebase
             window.firebase = firebase.initializeApp(config);
             // Use auth service
 
@@ -277,6 +288,7 @@ mixins.manageGlobalDataObject = {
 let useMixins = Object.keys(mixins).map(mixin => mixins[mixin])
 
 // var bus = new Vue();
+
 
 import VueLogger from 'vuejs-logger'
 

@@ -1,29 +1,27 @@
 import vue from "vue";
 
-let mediaItem = {
-    id: "",
-    description: "some description",
-    image: "name file images",
-    record: "name record file",
-}
 
-let mediaList = [mediaItem];
-let album = {
-    id: "1",
-    name: "first album",
-    description: "some description album",
-    mediaList: mediaList,
-    create: "date",
-}
+// import _ from 'lodash'
 
 export default {
 
+    saveSettings(settings) {
+
+        fileName = 'gd_settings.json';
+        folderpath = '/data/'
+        return writeToFile(fileName, settings);
+    },
+
     getFile(filename, folderpath) {
+        // alert("datagetfile");
+        // alert(filename);
+        // alert(folderpath);
         let promise = new Promise((resolve, reject) => {
 
             readFromFile(filename, folderpath, function(data) {
-                let fileData = data;
-                resolve(fileData);
+                resolve(data);
+            }, function(err) {
+                alert("#1");
             });
 
         });
@@ -37,6 +35,8 @@ export default {
             readFromFile(filename, function(data) {
                 fileData = data;
                 resolve(fileData);
+            }, (err) => {
+                alert("#2");
             });
 
         });
@@ -46,13 +46,20 @@ export default {
     },
     saveAlbum(_album) {
 
-        if (_album) {
-            let folderpath = "/albums/";
-            let filename = "album.json";
+        let folderpath = "/albums/";
+        let fileName = `gd_${_album.id}.json`;
+        _album.fileName = fileName;
 
-            writeToFile(filename, album, folderpath);
-        }
+        return writeToFile(fileName, _album, folderpath);
 
+
+
+    },
+
+    saveIndexAlbums(ia) {
+        let folderpath = "albums/";
+        let fileName = `indexalbums.json`;
+        writeToFile(fileName, ia, folderpath);
 
     },
     deleteAlbum(id) {
@@ -65,52 +72,60 @@ export default {
 
 function writeToFile(fileName, data, folderpath) {
 
-    data = JSON.stringify(data, null, '\t');
+    let promise = new Promise((resolve, reject) => {
+        data = JSON.stringify(data, null, '\t');
 
-    try {
-        window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
-            directoryEntry.getFile(fileName, { create: true }, function(fileEntry) {
-                fileEntry.createWriter(function(fileWriter) {
-                    fileWriter.onwriteend = function(e) {
-                        // for real-world usage, you might consider passing a success callback
-                        console.log('Write of file "' + fileName + '"" completed.');
-                    };
+        try {
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(fileSystem) {
+                    fileSystem.getDirectory(folderpath, { create: true, exclusive: false },
+                        function(dir) {
+                            dir.getFile(fileName, { create: true }, function(fileEntry) {
+                                fileEntry.createWriter(
+                                    function(fileWriter) {
+                                        var blob = new Blob([data], { type: 'text/plain' });
+                                        fileWriter.write(blob);
+                                        let result = {
+                                            status: true,
+                                            message: "Album created succesfully.",
+                                        }
+                                        resolve(result);
+                                    },
+                                    function() {
+                                        let msg = 'Unable to save file in path ' + folderpath;
+                                        let result = {
+                                            status: false,
+                                            message: msg,
+                                        }
+                                        reject(result);
+                                    });
 
-                    fileWriter.onerror = function(e) {
-                        // you could hook this up with our global error handler, or pass in an error callback
-                        console.log('Write failed: ' + e.toString());
-                    };
-
-                    var blob = new Blob([data], { type: 'text/plain' });
-                    fileWriter.write(blob);
-                }, errorHandler.bind(null, fileName));
-            }, errorHandler.bind(null, fileName));
-        }, errorHandler.bind(null, fileName));
-    } catch (error) {
-
-    }
+                            });
+                        },
+                        errorHandler.bind(null, fileName));
+                },
+                errorHandler.bind(null, fileName));
+        } catch (error) {
+            errorHandler.bind(null, error);
+        }
+    });
+    return promise;
 }
 
 function readFromFile(fileName, filePath, cb) {
-
-    try {
-        var pathToFile = cordova.file.externalDataDirectory + filePath + fileName;
-        window.resolveLocalFileSystemURL(pathToFile, function(fileEntry) {
+    var pathToFile = cordova.file.externalDataDirectory + filePath + fileName;
+    window.resolveLocalFileSystemURL(pathToFile, function(fileEntry) {
             fileEntry.file(function(file) {
                 var reader = new FileReader();
-
                 reader.onloadend = function(e) {
                     cb(JSON.parse(this.result));
                 };
-
                 reader.readAsText(file);
-            }, errorHandler.bind(null, fileName));
-        }, errorHandler.bind(null, fileName));
-    } catch (error) {
-        alert(error);
-        throw error;
-
-    }
+            }, errorHandler.bind(null, "fileName 1"));
+        },
+        (err) => {
+            console.log("Let start!");
+        }
+    );
 }
 
 
@@ -136,8 +151,8 @@ var errorHandler = function(fileName, e) {
             break;
         default:
             msg = 'Unknown error';
+
             break;
     };
-    alert(`Error  ${fileName}:  ${msg}`)
     console.log('Error (' + fileName + '): ' + msg);
 }

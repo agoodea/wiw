@@ -64,13 +64,6 @@
               <div class="card-content">
                 <div class="list-block">
                   <f7-list>
-                    <!-- <f7-list-item link="/albums1/" title="Albums" badge="5" badge-color="red" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>film</i>"></f7-list-item>
-                    <f7-list-item link="#tab2" title="Images" badge="13" badge-color="red" class="tab-link" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>images</i>"></f7-list-item>
-                    <f7-list-item link="#" class="tab-link" data-tab="#tab3" title="Records" badge="13" badge-color="red" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>albums</i>"></f7-list-item> -->
-
-
-
-
                     <a href="#main-view" class="item-link item-content tab-link close-login-screen">
                       <div class="item-media">
                         <i class='icon f7-icons color-deeporange' style='font-size: 35px;'>film</i>
@@ -114,7 +107,9 @@
               <div class="card-content">
                 <div class="list-block">
                   <f7-list>
-                    <f7-list-item link="/settings/" title="Settings" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>settings</i>"></f7-list-item>
+                     <f7-list-item link="#" title="Settings" data-popup=".popup-settings" class="open-popup" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>settings</i>">
+                    </f7-list-item>
+                    <!-- <f7-list-item l title="Settings" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>settings</i>"></f7-list-item> -->
                     <f7-list-item link="/profile/" title="Help" media="<i class='icon f7-icons color-deeporange' style='font-size: 35px;'>help</i>"></f7-list-item>
                   </f7-list>
                 </div>
@@ -163,6 +158,9 @@
             </div> -->
         </div>
       </div>
+    </f7-popup>
+    <f7-popup tablet-fullscreen class="popup-settings">
+      <settings></settings>
     </f7-popup>
   </f7-login-screen>
 </template>
@@ -237,7 +235,12 @@
     }
   }
   
+  import Settings from './settings.component.vue';
+
   export default  {
+    components: {
+			'settings': Settings,
+		},
     name: 'login-component',
     props: [],
     mounted() {
